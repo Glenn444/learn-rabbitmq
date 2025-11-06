@@ -15,7 +15,7 @@ func main() {
 	if err != nil {
 		fmt.Printf("error occurred connecting to amqp: %v", err)
 	}
-	fmt.Printf("connection was successful")
+	fmt.Printf("connection was successful\n")
 	defer conn.Close()
 
 	// wait for ctrl+c
@@ -23,5 +23,5 @@ func main() {
 	signal.Notify(signalChan, os.Interrupt)
 	sig := <-signalChan
 
-	fmt.Printf("signal to exit received: %v",sig)
+	fmt.Printf("signal to exit received: %v\n",sig)
 }
