@@ -5,6 +5,7 @@ import (
 	"log"
 	"os"
 
+	"github.com/bootdotdev/learn-pub-sub-starter/internal/gamelogic"
 	"github.com/joho/godotenv"
 	amqp "github.com/rabbitmq/amqp091-go"
 )
@@ -24,6 +25,9 @@ func main() {
 
 	defer conn.Close()
 
-	
 	fmt.Println("Starting Peril client...")
+	username,err := gamelogic.ClientWelcome()
+	if err != nil{
+		log.Fatal("Error getting username %v",err)
+	}
 }
