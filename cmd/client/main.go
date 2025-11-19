@@ -40,6 +40,40 @@ func main() {
 		log.Fatalf("error binding to the queue: %v", err)
 	}
 	
+	gameState := gamelogic.NewGameState(username)
 	// Keep the client running
-	select{}
+	for {
+		input := gamelogic.GetInput()
+		if input == nil {
+			break
+		}
+
+		//Handle the commands
+		if len(input) > 0 {
+			switch input[0] {
+			case "spawn":
+				err := gameState.CommandSpawn(input)
+				if err != nil{
+					fmt.Printf("error occured: %v\n",err)
+				}
+			case "move":
+				armyMove,err := gameState.CommandMove(input)
+				if err != nil{
+					log.Fatalf("error occured: %v\n",err)
+				}
+				fmt.Printf("move %v\n",armyMove.ToLocation)
+			case "status":
+				gameState.CommandStatus()
+			case "help":
+				gamelogic.PrintClientHelp()
+			case "spam":
+				fmt.Printf("Spamming not allowed yet\n")
+			case "quit":
+				gamelogic.PrintQuit()
+				return
+			default:
+				fmt.Printf("Entered wrong command\n")
+			}
+		}
+	}
 }
