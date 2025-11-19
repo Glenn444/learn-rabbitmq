@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"os/signal"
 
+	"github.com/bootdotdev/learn-pub-sub-starter/internal/gamelogic"
 	"github.com/bootdotdev/learn-pub-sub-starter/internal/pubsub"
 	"github.com/bootdotdev/learn-pub-sub-starter/internal/routing"
 	"github.com/joho/godotenv"
@@ -31,15 +31,40 @@ func main() {
 	if err != nil{
 		fmt.Printf("error occurred connecting to amqp: %v", err)
 	}
-	value := routing.PlayingState{
-		IsPaused: true,
+	// value := routing.PlayingState{
+	// 	IsPaused: true,
+	// }
+	// pubsub.PublishJSON(c,routing.ExchangePerilDirect,routing.PauseKey,value)
+
+	gamelogic.PrintServerHelp()
+
+	for {
+		input := gamelogic.GetInput()
+		if input == nil {
+			break
+		}
+
+		//Handle the commands
+		if len(input) > 0 {
+			switch input[0] {
+			case "pause":
+				fmt.Printf("Hey, I'm pausing the game")
+				value := routing.PlayingState{
+					IsPaused: true,
+				}
+				pubsub.PublishJSON(c, routing.ExchangePerilDirect, routing.PauseKey, value)
+			case "resume":
+				fmt.Printf("Hey, I'm resuming the game")
+				value := routing.PlayingState{
+					IsPaused: false,
+				}
+				pubsub.PublishJSON(c,routing.ExchangePerilDirect,routing.PauseKey,value)
+			case "quit":
+				fmt.Printf("Hey, I'm exiting the game")
+				return
+			default:
+				fmt.Printf("don't understand the command")
+			}
+		}
 	}
-	pubsub.PublishJSON(c,routing.ExchangePerilDirect,routing.PauseKey,value)
-
-	// wait for ctrl+c
-	signalChan := make(chan os.Signal, 1)
-	signal.Notify(signalChan, os.Interrupt)
-	sig := <-signalChan
-
-	fmt.Printf("signal to exit received: %v\n",sig)
 }

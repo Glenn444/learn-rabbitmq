@@ -39,40 +39,7 @@ func main() {
 	if err != nil {
 		log.Fatalf("error binding to the queue: %v", err)
 	}
-	c, err := conn.Channel()
-	if err != nil {
-		fmt.Printf("error occurred connecting to amqp: %v", err)
-	}
+	
 	// Keep the client running
-	gamelogic.PrintServerHelp()
-
-	for {
-		input := gamelogic.GetInput()
-		if input == nil {
-			break
-		}
-
-		//Handle the commands
-		if len(input) > 0 {
-			switch input[0] {
-			case "pause":
-				fmt.Printf("sending a pause message")
-				value := routing.PlayingState{
-					IsPaused: true,
-				}
-				pubsub.PublishJSON(c, routing.ExchangePerilDirect, routing.PauseKey, value)
-			case "resume":
-				fmt.Printf("sending a resume message")
-				value := routing.PlayingState{
-					IsPaused: false,
-				}
-				pubsub.PublishJSON(c,routing.ExchangePerilDirect,routing.PauseKey,value)
-			case "quit":
-				fmt.Printf("exiting...")
-				return
-			default:
-				fmt.Printf("don't understand the command")
-			}
-		}
-	}
+	select{}
 }
