@@ -41,6 +41,20 @@ func main() {
 	}
 
 	// Keep the client running
-	fmt.Println("Client is running. Press Ctrl+C to exit.")
-	select {} // Blocks forever until interrupted
+	gamelogic.PrintServerHelp()
+	
+	for{
+		input := gamelogic.GetInput()
+		if input == nil{
+			break
+		}
+
+		//Handle the commands
+		if len(input) > 0{
+			switch input[0]{
+			case "quit":
+				return
+			}
+		}
+	}
 }
