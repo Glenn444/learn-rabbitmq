@@ -27,7 +27,10 @@ func main() {
 	//fmt.Printf("connection was successful\n")
 	defer conn.Close()
 
-	c, err := conn.Channel()
+	//declare and bind to a queue
+	c,_,err := pubsub.DeclareAndBind(conn,"peril_topic","game_logs","game_logs.*",pubsub.Durable)
+
+	//c, err := conn.Channel()
 	if err != nil{
 		fmt.Printf("error occurred connecting to amqp: %v", err)
 	}
