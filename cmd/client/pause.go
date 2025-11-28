@@ -1,28 +1,16 @@
 package main
 
-import "sync"
+import (
+	"fmt"
 
-type UnitRank string
-type Location string
-
-type Unit struct {
-	ID       int
-	Rank     UnitRank
-	Location Location
-}
-
-type Player struct {
-	Username string
-	Units    map[int]Unit
-}
+	"github.com/bootdotdev/learn-pub-sub-starter/internal/gamelogic"
+	"github.com/bootdotdev/learn-pub-sub-starter/internal/routing"
+)
 
 
-type GameState struct {
-	Player Player
-	Paused bool
-	mu     *sync.RWMutex
-}
-
-func handlerPause(gameState GameState){
-	
+func handlerPause(gs *gamelogic.GameState) func(routing.PlayingState){
+	return func(ps routing.PlayingState) {
+		defer fmt.Printf("> ")
+		gs.HandlePause(ps)
+	}
 }
