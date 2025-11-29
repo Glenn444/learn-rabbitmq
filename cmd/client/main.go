@@ -42,6 +42,7 @@ func main() {
 	
 	gameState := gamelogic.NewGameState(username)
 	// Keep the client running
+	pubsub.SubscribeJSON(conn,routing.ExchangePerilDirect,username,routing.PauseKey,pubsub.Transient,handlerPause(gameState))
 	for {
 		input := gamelogic.GetInput()
 		if input == nil {
